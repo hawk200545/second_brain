@@ -102,10 +102,12 @@ app.get("/content", async(req : UserRequest,res : Response)=>{
       })
       return ;
     }
-    let contents = await Content.find({
+    let content = await Content.find({
       userId : req.user.id.toString()
     })
-    res.status(200).json(contents);
+    res.status(200).json({
+      content
+    });
     
   }catch(err){
       res.status(500).json({

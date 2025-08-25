@@ -10,11 +10,12 @@ import cors from "cors"
 const app = express();
 
 app.use(
-  cors({
-    origin: "https://second-brain-app-three.vercel.app/",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "token"],
-  })
+  // cors({
+  //   origin: "https://second-brain-app-three.vercel.app/",
+  //   methods: ["GET", "POST", "PUT", "DELETE"],
+  //   allowedHeaders: ["Content-Type", "token"],
+  // })
+  cors()
 );
 
 app.use(json());

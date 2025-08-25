@@ -66,7 +66,10 @@ export async function connectDB() {
   try {
     if (!mongo_url) throw new Error("MONGO_URL is not defined in .env");
 
-    await mongoose.connect(mongo_url);
+    await mongoose.connect(mongo_url, {
+      serverSelectionTimeoutMS: 50000,
+      connectTimeoutMS: 50000,
+    });
     console.log("Connected to database");
   } catch (err) {
     console.error("Database connection failed", err);

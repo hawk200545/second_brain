@@ -76,7 +76,10 @@ export default function Signup() {
             password: debouncedPass,
           });
           toast.success(response.data.message);
-          navigate("/signin");
+          toast.info("You will be redirected to Login Page in 3 seconds")
+          setTimeout(()=>{
+            navigate("/signin");
+          },3000);
         } catch (err) {
           if (axios.isAxiosError(err)) {
             if (err.response) {

@@ -56,8 +56,8 @@ export default function Login() {
             password: debouncedPass,
           }
         );
-        navigate("/");
         toast.success(response.data.message);
+        navigate("/");
       } catch (err) {
         if (axios.isAxiosError(err)) {
           if (err.response) {

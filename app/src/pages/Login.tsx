@@ -47,27 +47,31 @@ export default function Login() {
     if (validEmail || validPass) {
       toast.warning("Please fix the error before Submit");
       return;
-    } else {
-      try {
-        const response = await axios.post(
-          VERCEL_URL+"api/v1/signin",
-          {
-            username: debouncedEmail,
-            password: debouncedPass,
-          }
-        );
-        toast.success(response.data.message);
-        navigate("/");
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          if (err.response) {
-            toast.error(err.response.data.message);
-          } else {
-            toast.error("Internal Error");
-          }
-        }
-      }
     }
+    
+    const promise = () => new Promise((resolve, reject) => {
+      axios.post(VERCEL_URL + "api/v1/signin", {
+        username: debouncedEmail,
+        password: debouncedPass,
+      })
+      .then(response => {
+        resolve(response.data);
+        navigate("/");
+      })
+      .catch(error => {
+        if (axios.isAxiosError(error) && error.response) {
+          reject(error.response.data.message);
+        } else {
+          reject("An unexpected error occurred.");
+        }
+      });
+    });
+
+    toast.promise(promise(), {
+      loading: 'Logging in...',
+      success: (data: any) => `${data.message}`,
+      error: (message) => `${message}`,
+    });
   }
 
   return (

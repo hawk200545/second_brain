@@ -69,27 +69,33 @@ export default function Signup() {
       if (validEmail != "username available" || validPass) {
         toast.warning("Please fix the error before Submit");
         return;
-      } else {
-        try {
-          const response = await axios.post(VERCEL_URL + "api/v1/signup", {
-            username: debouncedEmail,
-            password: debouncedPass,
-          });
-          toast.success(response.data.message);
-          toast.info("You will be redirected to Login Page in 3 seconds")
-          setTimeout(()=>{
-            navigate("/signin");
-          },3000);
-        } catch (err) {
-          if (axios.isAxiosError(err)) {
-            if (err.response) {
-              toast.error(err.response.data.message);
-            } else {
-              toast.error("Internal Error");
-            }
-          }
-        }
       }
+      
+      const promise = () => new Promise((resolve, reject) => {
+        axios.post(VERCEL_URL + "api/v1/signup", {
+          username: debouncedEmail,
+          password: debouncedPass,
+        })
+        .then(response => {
+          resolve(response.data);
+          setTimeout(() => {
+            navigate("/signin");
+          }, 3000);
+        })
+        .catch(error => {
+          if (axios.isAxiosError(error) && error.response) {
+            reject(error.response.data.message);
+          } else {
+            reject("An unexpected error occurred.");
+          }
+        });
+      });
+  
+      toast.promise(promise(), {
+        loading: 'Creating account...',
+        success: (data: any) => `${data.message}`,
+        error: (message) => `${message}`,
+      });
     }
     return (
       <>

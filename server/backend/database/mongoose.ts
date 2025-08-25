@@ -62,7 +62,7 @@ const LinkModel = mongoose.model<ILink>("Link", LinkSchema);
 
 // TODO : Should export this function as well
 // Should use this function @index.ts
-async function connectDB() {
+export async function connectDB() {
   try {
     if (!mongo_url) throw new Error("MONGO_URL is not defined in .env");
 
@@ -73,7 +73,5 @@ async function connectDB() {
     process.exit(1);
   }
 }
-// TODO : Should call this @index.js
-connectDB();
 
 export { UserModel, ContentModel, LinkModel };

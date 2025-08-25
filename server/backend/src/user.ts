@@ -30,8 +30,7 @@ const userSchema = z.object({
 });
 
 app.get("/", async(req: Request, res: Response)=>{
-  res.send(JWT_USER_SECRET);
-  console.log(JWT_USER_SECRET);
+  res.send("Server deployed");
 })
 
 app.post("/match", async(req :Request, res: Response)=> {

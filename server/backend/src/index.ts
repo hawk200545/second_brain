@@ -4,6 +4,8 @@ import user_middleware from "../src/middleware";
 import { user_route } from "../src/user";
 import { content_route } from "../src/content";
 import { link_route } from "../src/share";
+import { connectDB } from "../database/mongoose";
+connectDB();
 import cors from "cors"
 const app = express();
 

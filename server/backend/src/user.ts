@@ -29,6 +29,9 @@ const userSchema = z.object({
     }),
 });
 
+app.get("/", async(req: Request, res: Response)=>{
+  res.send("Deployed Succesfully")
+})
 
 app.post("/match", async(req :Request, res: Response)=> {
   const username = req.body.username;

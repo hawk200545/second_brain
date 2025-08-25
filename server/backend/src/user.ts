@@ -4,6 +4,7 @@ import * as z from "zod";
 import { UserModel as User } from "../database/mongoose";
 import jwt from "jsonwebtoken";
 import { JWT_USER_SECRET } from "../config/config";
+import { Request, Response } from "express";
 
 if (!JWT_USER_SECRET) {
     throw new Error("JWT_USER_SECRET is not defined. Please set it in your .env file.");
@@ -27,6 +28,23 @@ const userSchema = z.object({
         "Password must contain atleat 1 Uppercase, 1 LowerCase, 1 Digit and a Special Character",
     }),
 });
+
+
+app.post("/match", async(req :Request, res: Response)=> {
+  const username = req.body.username;
+  let response = await User.findOne({
+    username
+  })
+  if(!response){
+    res.status(200).json({
+      message : "username available"
+    })
+  }else {
+    res.status(201).json({
+      message: "User already exists",
+    });
+  }
+})
 
 // Signup endpoint @params : {username,password} from body
 // Returns

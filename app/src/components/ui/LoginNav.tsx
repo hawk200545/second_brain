@@ -1,7 +1,7 @@
 import brain from "../../assets/brain.svg"
 import { Button } from "./Button"
 interface navProps{
-    type : "login" | "signup"
+    type : "Signin" | "Signup"
 }
 export default function LoginNav(props: navProps){
     return (

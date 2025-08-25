@@ -4,8 +4,16 @@ import user_middleware from "./middleware";
 import { user_route } from "./user";
 import { content_route } from "./content";
 import { link_route } from "./share";
-
+import cors from "cors"
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "token"],
+  })
+);
 
 app.use(json());
 app.use("/api/v1",user_route); // User Route doesn't need a middleware

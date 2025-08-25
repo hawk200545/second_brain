@@ -3,11 +3,14 @@ import { Button } from "../components/ui/Button";
 import LoginNav from "../components/ui/LoginNav";
 import { usernmaeSchema, passwordSchema } from "../schemas/userSchema";
 import useDebounce from "../hooks/useDebounce";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { VERCEL_URL } from "../../config";
 import axios from "axios";
 
 export default function Login() {
+
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const debouncedEmail = useDebounce(email, 200);
   const [password, setPassword] = useState("");
@@ -53,7 +56,7 @@ export default function Login() {
             password: debouncedPass,
           }
         );
-        
+        navigate("/");
         toast.success(response.data.message);
       } catch (err) {
         if (axios.isAxiosError(err)) {

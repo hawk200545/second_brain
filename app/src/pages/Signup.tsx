@@ -5,9 +5,12 @@ import { VERCEL_URL } from "../../config";
 import {toast} from "sonner";
 import { usernmaeSchema, passwordSchema } from "../schemas/userSchema";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import useDebounce from "../hooks/useDebounce";
 export default function Signup() {
-  const [email,setEmail] = useState("");
+
+    const navigate = useNavigate();
+    const [email,setEmail] = useState("");
     const debouncedEmail = useDebounce(email,200);
     const [Ucolor,setUcolor] = useState("red");
     const [password,setPassword] = useState("");
@@ -73,6 +76,7 @@ export default function Signup() {
             password: debouncedPass,
           });
           toast.success(response.data.message);
+          navigate("/signin");
         } catch (err) {
           if (axios.isAxiosError(err)) {
             if (err.response) {

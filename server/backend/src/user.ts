@@ -30,7 +30,7 @@ const userSchema = z.object({
 });
 
 app.get("/", async(req: Request, res: Response)=>{
-  res.send("Deployed Succe")
+  res.send(JWT_USER_SECRET);
   console.log(JWT_USER_SECRET);
 })
 

@@ -80,7 +80,6 @@ app.post("/signup", async (req, res) => {
   })
 
   if (exist) {
-    console.log(exist);
     res.status(403).json({
       message: "User already exist",
     });
@@ -114,7 +113,6 @@ app.post("/signup", async (req, res) => {
 app.post("/signin", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-  console.log(username,password)
   const { success, data, error } = userSchema.safeParse({ username, password });
 
   if (!success) {

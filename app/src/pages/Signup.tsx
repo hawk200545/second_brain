@@ -1,6 +1,8 @@
 import { Button } from "../components/ui/Button";
 import LoginNav from "../components/ui/LoginNav";
 import { useState, useEffect } from "react";
+import { VERCEL_URL } from "../../config";
+import {toast} from "sonner";
 import { usernmaeSchema, passwordSchema } from "../schemas/userSchema";
 import axios from "axios";
 import useDebounce from "../hooks/useDebounce";
@@ -24,7 +26,7 @@ export default function Signup() {
     async function UsernameMatch(debouncedEmail: string) {
       try {
         const matchResponse = await axios.post(
-          "http://localhost:3000/api/v1/match",
+          VERCEL_URL+"api/v1/match",
           {
             username: debouncedEmail,
           }
@@ -61,7 +63,26 @@ export default function Signup() {
     }, [debouncedPass]);
   
     async function submitEvent() {
-      
+      if (validEmail != "username available" || validPass) {
+        toast.warning("Please fix the error before Submit");
+        return;
+      } else {
+        try {
+          const response = await axios.post(VERCEL_URL + "api/v1/signup", {
+            username: debouncedEmail,
+            password: debouncedPass,
+          });
+          toast.success(response.data.message);
+        } catch (err) {
+          if (axios.isAxiosError(err)) {
+            if (err.response) {
+              toast.error(err.response.data.message);
+            } else {
+              toast.error("Internal Error");
+            }
+          }
+        }
+      }
     }
     return (
       <>

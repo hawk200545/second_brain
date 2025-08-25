@@ -4,6 +4,7 @@ import LoginNav from "../components/ui/LoginNav";
 import { usernmaeSchema, passwordSchema } from "../schemas/userSchema";
 import useDebounce from "../hooks/useDebounce";
 import { toast } from "sonner";
+import { VERCEL_URL } from "../../config";
 import axios from "axios";
 
 export default function Login() {
@@ -40,19 +41,19 @@ export default function Login() {
   }, [debouncedPass]);
 
   async function submitEvent() {
-    console.log("Submit");
     if (validEmail || validPass) {
       toast.warning("Please fix the error before Submit");
       return;
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/v1/signin",
+          VERCEL_URL+"api/v1/signin",
           {
             username: debouncedEmail,
             password: debouncedPass,
           }
         );
+        
         toast.success(response.data.message);
       } catch (err) {
         if (axios.isAxiosError(err)) {

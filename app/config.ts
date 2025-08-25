@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
+const VERCEL_URL = import.meta.env.VITE_VERCEL_URL;
 
-dotenv.config();
-
-const VERCEL_URL = process.env.VERCEL_URL;
-
-export {VERCEL_URL}
+export { VERCEL_URL };

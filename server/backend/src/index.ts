@@ -21,9 +21,8 @@ app.use("/api/v1/brain",link_route);
 app.use(user_middleware); // Adding middleware for verification of jwt and parsing the userId
 app.use("/api/v1",content_route); 
 
-app.listen(3000,()=>{
-    console.log(`Listening port : ${3000}`)
-});
+export default app; //for vercel serverless
+
 
 
 

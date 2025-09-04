@@ -148,7 +148,7 @@ export default function Signup() {
                     Login
                   </a>
                 </div>
-                <Button text="Submit" onclick={submitEvent} variant="primary" size="md" />
+                <Button text="Submit" onClick={submitEvent} variant="primary" size="md" />
               </div>
             </div>
           </div>

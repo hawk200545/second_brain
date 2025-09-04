@@ -1,5 +1,5 @@
 
-import { createContext, useState, ReactNode, Dispatch, SetStateAction } from "react";
+import { createContext, useState, type ReactNode, type Dispatch, type SetStateAction } from "react";
 
 interface AppContextType {
   openModal: boolean;

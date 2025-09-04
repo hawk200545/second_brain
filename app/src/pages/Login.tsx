@@ -130,7 +130,7 @@ export default function Login() {
               </div>
               <Button
                 text="Submit"
-                onclick={submitEvent}
+                onClick={submitEvent}
                 variant="primary"
                 size="md"
               />

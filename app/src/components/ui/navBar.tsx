@@ -5,6 +5,9 @@ import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 export function Navbar(){
   const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("Navbar must be used within an AppProvider");
+  }
   const {setOpenModal} = context;
     return (
       <>
@@ -22,7 +25,7 @@ export function Navbar(){
               size="md"
               text="Add Content"
               startIcon={<Plus size={20} />}
-              onclick={()=>{setOpenModal(true)}}
+              onClick={()=>{setOpenModal(true)}}
             />
           </div>
         </div>

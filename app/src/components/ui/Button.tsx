@@ -6,7 +6,7 @@ export default interface ButtonProps {
   text: string;
   startIcon?: string | ReactElement;
   endIcon?: string | ReactElement;
-  onclick?: () => void
+  onClick?: () => void
 }
 
 const variants = {
@@ -26,7 +26,7 @@ export function Button(props: ButtonProps) {
     <>
       <button
         className={`${variants[props.variant]} ${size[props.size]} ${default_style} gap-1.5`}
-        onClick={props.onclick}
+        onClick={props.onClick}
       >
         {props.startIcon}
         {props.text}

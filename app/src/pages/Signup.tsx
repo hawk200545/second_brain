@@ -78,6 +78,7 @@ export default function Signup() {
         })
         .then(response => {
           resolve(response.data);
+          toast.info("You will be redirected to login Page in 3 seconds");
           setTimeout(() => {
             navigate("/signin");
           }, 3000);

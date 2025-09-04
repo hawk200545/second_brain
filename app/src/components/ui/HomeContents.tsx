@@ -1,7 +1,17 @@
+import { useContext } from "react";
 import Card from "./Card";
+import CreateModal from "../../pages/CreateModal";
+import { AppContext } from "../../context/AppContext";
+
 export default function HomeContents() {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useContext must be used within a AppProvider");
+  }
+  const { openModal } = context;
   return (
     <>
+      {openModal && <CreateModal />}
       <div className="grid justify-items-stretch grid-cols-3 gap-5">
         <Card
           type="Document"

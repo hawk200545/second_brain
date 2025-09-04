@@ -28,7 +28,7 @@
     "@types/cors": "^2.8.19",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.3.0",
-    "@vercel/node": "^5.3.13",
+    "@vercel/node": "^4.0.0",
     "typescript": "^5.4.5"
   }
 }

@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { Xmark } from "../assets/x-mark";
 import Dropdown from "../components/ui/DropDown";
 import { AppContext } from "../context/AppContext";
-
+import TagsOpt from "../components/ui/TagsOpt";
 export default function CreateModal() {
   const [type, setType] = useState("");
   const [title, setTitle] = useState("");
@@ -59,6 +59,7 @@ export default function CreateModal() {
               onChange={handleContentChange}
             />
           </div>
+          <TagsOpt type="string"/>
           <div className="flex justify-end">
             <button
               onClick={handleSubmit}

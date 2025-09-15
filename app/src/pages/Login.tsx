@@ -6,10 +6,17 @@ import useDebounce from "../hooks/useDebounce";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { VERCEL_URL } from "../../config";
+import { AppContext } from "../context/AppContext";
+import { useContext } from "react";
 import axios from "axios";
 
 export default function Login() {
 
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useContext must be used within a AppProvider");
+  }
+  const {setToken} = context;
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const debouncedEmail = useDebounce(email, 200);
@@ -55,6 +62,8 @@ export default function Login() {
         password: debouncedPass,
       })
       .then(response => {
+        setToken(response.data.token);
+        localStorage.setItem('token',response.data.token);
         resolve(response.data);
         navigate("/");
       })

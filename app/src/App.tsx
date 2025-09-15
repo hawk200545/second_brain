@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import { Toaster } from "sonner";
-import { AppProvider } from "./context/AppContext";
+import { AppProvider } from "./context/AppProvider";
 
 function App() {
   return (

@@ -2,7 +2,7 @@ import { ContentModel, LinkModel } from "../database/mongoose";
 import { Router } from "express";
 import { Request, Response } from "express";
 import { randHash } from "./utils";
-import user_middleware from "./middleware";
+import {user_middleware} from "./middleware";
 import { ObjectId } from "mongoose";
 
 interface UserRequest extends Request{

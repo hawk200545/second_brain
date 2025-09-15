@@ -1,7 +1,9 @@
 import { Router, Request, Response } from "express";
 import * as z from "zod";
 import { Types } from "mongoose";
-import { UserModel as User, ContentModel as Content } from "../database/mongoose";
+import { UserModel as User, ContentModel as Content, FileModel, TagModel, ITag } from "../database/mongoose";
+import { upload } from "./middleware";
+import { uploadOnCloudinary } from "./cloudinary";
 
 // Extending to include the user in the Request interface.
 //  TODO : Should find a proper way to do this 
@@ -24,12 +26,11 @@ const contentSchema = z
     body: z.object({
       title: z.string().optional(),
       paragraph: z.string().optional(),
-      points: z.array(z.string()).optional(),
     }).optional(),
+    files: z.array(z.instanceof(File)).optional(),
   }).strict();
 
 type IContent = z.infer<typeof contentSchema>;
-
 
 // Content Creation Endpoint : @params{jwt -> userId, contentObject}
 // Returns
@@ -139,5 +140,72 @@ app.delete("/content", async(req:UserRequest , res : Response)=>{
         res.status(403).json({ message: "Unauthorized to delete this content" });
     }
 })
+
+app.post("/content/upload",upload.array('files'), async (req: UserRequest, res: Response) => {
+  if (!req.user || !req.user.id) {
+    return res.status(401).json({
+      message: "Unauthorized: User information missing from token.",
+    });
+  }
+
+  const files = req.files as Express.Multer.File[];
+  if (!files || files.length === 0) {
+    return res.status(400).json({
+      message: "No files uploaded.",
+    });
+  }
+
+  const tags:string[] = JSON.parse(req.body.tags);
+
+  try {
+    const uploadPromises = files.map(file => uploadOnCloudinary(file.path));
+    const responses = await Promise.all(uploadPromises);
+
+    const createdContent = [];
+    const createdTag:ITag[] = [];
+    for (let i = 0; i < responses.length; i++) {
+      const response = responses[i];
+      const file = files[i];
+
+      if (!response) {
+        console.error(`File upload to Cloudinary failed for ${file.originalname}`);
+        continue;
+      }
+      const newFile = {
+        FileName : file.originalname,
+        FileURL : response.secure_url,
+        userId : req.user.id
+      };
+      
+      createdContent.push(await FileModel.create(newFile));
+    }
+    for (const t of tags) {
+      const response = await TagModel.findOne({ Tag: t });
+      const tagDoc = response ? response : await TagModel.create({ Tag: t });
+      createdTag.push(tagDoc);
+    }
+    const newContent = {
+      type : "Document",
+      title : req.body.title,
+      files : createdContent.map(file=>file._id),
+      tags : createdTag.map((tag : ITag)=>tag._id),
+      userId : req.user.id,
+    }
+
+    await Content.create(newContent);
+
+    return res.status(200).json({
+      message: "Files uploaded successfully",
+      content: newContent,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      message: "Internal server error.",
+      err,
+    });
+  }
+});
+
 
 export const content_route = app;

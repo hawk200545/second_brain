@@ -41,6 +41,6 @@ export default function HomeContents() {
           tags={["Third","Help"]}
         />
       </div>
-    </>
+     </>
   );
 }

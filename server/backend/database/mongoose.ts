@@ -1,5 +1,6 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 import { mongo_url } from "../config/config";
+import { object } from "zod";
 
 // User Interface
 interface IUser extends Document {
@@ -7,14 +8,29 @@ interface IUser extends Document {
   password: string;
 }
 
+// File Interface
+interface IFile extends Document {
+  FileName: string;
+  FileURL: string;
+  userId: mongoose.Types.ObjectId;
+}
+
+// Tag Interface
+export interface ITag extends Document{
+  Tag : string;
+  _id : Types.ObjectId;
+
+}
+
 // Content Interface
 interface IContent extends Document {
   link: string;
   type: string;
   title: string;
-  tags?: string[];
+  tags?: Types.ObjectId[];
   userId: mongoose.Types.ObjectId;
   body?: Record<string, any>;
+  files: [IFile];
   created_at: Date;
 }
 // Link Interface
@@ -29,6 +45,18 @@ const UserSchema = new Schema<IUser>({
   password: { type: String, required: true },
 });
 
+// File Schema
+const FileSchema = new Schema<IFile>({
+  FileName : {type:String, required: true},
+  FileURL : {type : String, unique: true, required: true},
+  userId : {type : Schema.Types.ObjectId, ref: "User"}
+})
+
+// Tags Schema
+const TagsSchema = new Schema<ITag>({
+  Tag : {type : String, required: true}
+})
+
 // Content Schema [Updated to suite the Card compenent]
 // TODO : Delete the old Schema in the db
 const ContentSchema = new Schema<IContent>({
@@ -39,13 +67,13 @@ const ContentSchema = new Schema<IContent>({
     required: true,
   },
   title: { type: String, required: true },
-  tags: { type: [String] },
+  tags: [{ type: Schema.Types.ObjectId , ref: "Tag"}],
   userId: { type: Schema.Types.ObjectId, ref: "User" },
   body: {
     title: { type: String },
     paragraph: { type: String },
-    points: [{ type: String }],
   },
+  files : [{type : Schema.Types.ObjectId , ref: "File"}],
   created_at: { type: Date, default: Date.now },
 });
 
@@ -59,6 +87,8 @@ const LinkSchema = new Schema<ILink>({
 const UserModel = mongoose.model<IUser>("User", UserSchema);
 const ContentModel = mongoose.model<IContent>("Content", ContentSchema);
 const LinkModel = mongoose.model<ILink>("Link", LinkSchema);
+const FileModel = mongoose.model<IFile>("File",FileSchema);
+const TagModel = mongoose.model<ITag>("Tag",TagsSchema);
 
 // TODO : Should export this function as well
 // Should use this function @index.ts
@@ -77,4 +107,4 @@ export async function connectDB() {
   }
 }
 
-export { UserModel, ContentModel, LinkModel };
+export { UserModel, ContentModel, LinkModel, FileModel, TagModel };

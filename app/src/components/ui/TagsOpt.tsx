@@ -2,16 +2,16 @@ import { AppContext } from "../../context/AppContext";
 import { useContext, useState } from "react";
 import { Button } from "./Button";
 
-interface Props {
+interface Tag {
   type: string;
 }
 
-export default function TagsOpt({ type }: Props){
+export default function TagsOpt({ type }: Tag){
     const context = useContext(AppContext);
     if (!context) {
         throw new Error("useContext must be used within a AppProvider");
     }
-    const { tags, setTags } = context;
+    const {tags, setTags } = context;
     const [tagInput, setTagInput] = useState<string>("");
 
     const handleTags = (e: React.ChangeEvent<HTMLInputElement>) => {

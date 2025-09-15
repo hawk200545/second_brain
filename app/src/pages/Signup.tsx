@@ -17,8 +17,6 @@ export default function Signup() {
     const debouncedPass = useDebounce(password,200);
     const [validEmail,setValidEmail] = useState("");
     const [validPass,setValidPass] = useState("");
-  
-  
     const emailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setEmail(e.target.value);
     };

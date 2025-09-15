@@ -1,19 +1,13 @@
 
-import { createContext, useState, type ReactNode, type Dispatch, type SetStateAction } from "react";
+import { createContext, type Dispatch, type SetStateAction } from "react";
 
 interface AppContextType {
   openModal: boolean;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
+  tags: string[];
+  setTags: Dispatch<SetStateAction<string[]>>;
+  token: string;
+  setToken : Dispatch<SetStateAction<string>>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
-
-export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [openModal, setOpenModal] = useState(false);
-
-  return (
-    <AppContext.Provider value={{ openModal, setOpenModal }}>
-      {children}
-    </AppContext.Provider>
-  );
-};

@@ -1,6 +1,6 @@
 import express from "express";
 import { json } from "express";
-import user_middleware from "../src/middleware";
+import {user_middleware} from "../src/middleware";
 import { user_route } from "../src/user";
 import { content_route } from "../src/content";
 import { link_route } from "../src/share";

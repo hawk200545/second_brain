@@ -3,10 +3,10 @@ import { Xmark } from "../assets/x-mark";
 import Dropdown from "../components/ui/DropDown";
 import { AppContext } from "../context/AppContext";
 import TagsOpt from "../components/ui/TagsOpt";
+import FileUpload from "../components/ui/FileUpload";
 export default function CreateModal() {
   const [type, setType] = useState("");
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
 
   const context = useContext(AppContext);
   if (!context) {
@@ -18,13 +18,9 @@ export default function CreateModal() {
     setTitle(e.target.value);
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
-  };
-
   const handleSubmit = () => {
     // Handle the form submission
-    console.log({ type, title, content });
+    console.log({ type, title });
     setOpenModal(false);
   };
 
@@ -51,14 +47,7 @@ export default function CreateModal() {
               onChange={handleTitleChange}
             />
           </div>
-          <div className="py-4">
-            <div className="text-gray-700">Content</div>
-            <textarea
-              className="border-2 rounded-lg border-gray-300 hover:border-gray-400"
-              value={content}
-              onChange={handleContentChange}
-            />
-          </div>
+          <FileUpload />
           <TagsOpt type="string"/>
           <div className="flex justify-end">
             <button

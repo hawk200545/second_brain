@@ -2,11 +2,7 @@ import { AppContext } from "../../context/AppContext";
 import { useContext, useState } from "react";
 import { Button } from "./Button";
 
-interface Tag {
-  type: string;
-}
-
-export default function TagsOpt({ type }: Tag){
+export default function TagsOpt(){
     const context = useContext(AppContext);
     if (!context) {
         throw new Error("useContext must be used within a AppProvider");

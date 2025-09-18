@@ -1,14 +1,19 @@
-import { useContext } from "react";
 import Card from "./Card";
 import CreateModal from "../../pages/CreateModal";
-import { AppContext } from "../../context/AppContext";
+import { useSelector } from "react-redux";
+import {type RootState} from '../../redux/store';
+import { useDispatch } from "react-redux";
+import { clearTags } from "../../redux/tagsSlice";
+import { useEffect } from "react";
 
 export default function HomeContents() {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("useContext must be used within a AppProvider");
-  }
-  const { openModal } = context;
+
+  const dispatch = useDispatch();
+  const openModal = useSelector((state: RootState)=> state.modal);
+  useEffect(()=>{
+    dispatch(clearTags());
+  },[openModal]);
+  
   return (
     <>
       {openModal && <CreateModal />}

@@ -10,6 +10,7 @@ const modalSlice = createSlice({
         },
         setModal(state,action){
             state = action.payload;
+            return state;
         }
     }
 })

@@ -6,17 +6,13 @@ import useDebounce from "../hooks/useDebounce";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { VERCEL_URL } from "../../config";
-import { AppContext } from "../context/AppContext";
-import { useContext } from "react";
+import { setToken } from "../redux/tokenSlice";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 
 export default function Login() {
+  const dispatch = useDispatch();
 
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("useContext must be used within a AppProvider");
-  }
-  const {setToken} = context;
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const debouncedEmail = useDebounce(email, 200);
@@ -56,13 +52,13 @@ export default function Login() {
       return;
     }
     
-    const promise = () => new Promise((resolve, reject) => {
+    const promise = () : Promise<LoginResponse> => new Promise((resolve, reject) => {
       axios.post(VERCEL_URL + "api/v1/signin", {
         username: debouncedEmail,
         password: debouncedPass,
       })
       .then(response => {
-        setToken(response.data.token);
+        dispatch(setToken(response.data.token));
         localStorage.setItem('token',response.data.token);
         resolve(response.data);
         navigate("/");
@@ -76,9 +72,13 @@ export default function Login() {
       });
     });
 
+    interface LoginResponse {
+      message: string;
+    }
+
     toast.promise(promise(), {
       loading: 'Logging in...',
-      success: (data: any) => `${data.message}`,
+      success: (data: LoginResponse) => `${data.message}`,
       error: (message) => `${message}`,
     });
   }

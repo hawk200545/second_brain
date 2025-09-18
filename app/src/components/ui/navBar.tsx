@@ -1,14 +1,11 @@
 import { Button } from "./Button"
 import { Share } from "../../assets/share"
 import { Plus } from "../../assets/plus"
-import { useContext } from "react";
-import { AppContext } from "../../context/AppContext";
+import { toggleModal } from "../../redux/modalSlice";
+import { useDispatch } from "react-redux";
 export function Navbar(){
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("Navbar must be used within an AppProvider");
-  }
-  const {setOpenModal} = context;
+  const dispatch = useDispatch();
+  
     return (
       <>
         <div className="flex items-center justify-between">
@@ -25,7 +22,7 @@ export function Navbar(){
               size="md"
               text="Add Content"
               startIcon={<Plus size={20} />}
-              onClick={()=>{setOpenModal(true)}}
+              onClick={()=>{dispatch(toggleModal());}}
             />
           </div>
         </div>

@@ -47,7 +47,6 @@ export default function FileUpload(porps: fileProps) {
             axios
               .post( VERCEL_URL + "api/v1/content/upload", formData, {
                 headers: {
-                  "Content-Type": "multipart/form-data",
                   Authorization: token,
                 },
                 onUploadProgress: (progressEvent) => {

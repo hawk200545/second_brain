@@ -18,7 +18,6 @@ app.use(
   })
   // cors()
 );
-app.options("*", cors());
 
 app.use(json());
 app.use("/api/v1",user_route); // User Route doesn't need a middleware

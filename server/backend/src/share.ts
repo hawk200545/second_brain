@@ -61,11 +61,11 @@ app.post("/share", user_middleware, async(req : UserRequest, res: Response)=>{
 })
 
 app.get("/:sharelink", async(req : Request, res : Response) => {
-    const hash = req.params.sharelink;
+    const {sharelink} = req.params;
 
     try{
         let link = await LinkModel.findOne({
-        hash
+        hash : sharelink
     })
     if(!link) {
         res.status(404).json({

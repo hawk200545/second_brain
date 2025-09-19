@@ -68,7 +68,7 @@ app.post("/content", async (req: UserRequest, res: Response) => {
 
   for (const t of tags) {
     const response = await TagModel.findOne({ Tag: t });
-    const tagDoc = response ? response : await TagModel.create({ Tag: t });
+    const tagDoc = response ? response : await TagModel.create({ Tag: t.toLowerCase() });
     createdTag.push(tagDoc);
   }
 
@@ -237,7 +237,7 @@ app.post(
       }
       for (const t of tags) {
         const response = await TagModel.findOne({ Tag: t });
-        const tagDoc = response ? response : await TagModel.create({ Tag: t });
+        const tagDoc = response ? response : await TagModel.create({ Tag: t.toLowerCase() });
         createdTag.push(tagDoc);
       }
       const newContent = {

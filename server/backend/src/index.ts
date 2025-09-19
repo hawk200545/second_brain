@@ -5,17 +5,18 @@ import { user_route } from "../src/user";
 import { content_route } from "../src/content";
 import { link_route } from "../src/share";
 import { connectDB } from "../database/mongoose";
+import { FRONTEND_URL } from "../config/config";
 connectDB();
 import cors from "cors"
 const app = express();
 
 app.use(
-  // cors({
-  //   origin: "https://second-brain-app-three.vercel.app/",
-  //   methods: ["GET", "POST", "PUT", "DELETE"],
-  //   allowedHeaders: ["Content-Type", "token"],
-  // })
-  cors()
+  cors({
+    origin: FRONTEND_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization", "token",],
+  })
+  // cors()
 );
 
 app.use(json());

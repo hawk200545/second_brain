@@ -2,50 +2,103 @@ import Card from "./Card";
 import CreateModal from "../../pages/CreateModal";
 import { useSelector } from "react-redux";
 import {type RootState} from '../../redux/store';
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearTags } from "../../redux/tagsSlice";
 import { useEffect } from "react";
+import * as z from "zod";
+import axios from "axios";
+import { VERCEL_URL } from "../../../config";
+
+const contentSchemaDef = {
+  type: z.enum(["Tweet", "Document", "Video"]),
+  link: z.string().optional(),
+  title: z.string().min(1, { message: "Title cannot be empty" }),
+  tags: z.array(z.string()).optional(),
+  body: z
+    .object({
+      title: z.string().optional(),
+      paragraph: z.string().optional(),
+    })
+    .optional(),
+  files: z.array(z.instanceof(File)).optional(),
+};
+type Content = z.infer<z.ZodObject<typeof contentSchemaDef>>;
 
 export default function HomeContents() {
-
+  const [error, setError] = useState("");
+  const [contents, setContents] = useState<Array<Content>>([]);
   const dispatch = useDispatch();
+  const token = useSelector((state: RootState) => state.token);
   const openModal = useSelector((state: RootState)=> state.modal);
   useEffect(()=>{
     dispatch(clearTags());
+  },[dispatch, openModal]);
+  
+  async function fetchData() {
+      await axios.get(VERCEL_URL+"api/v1/content",{
+        headers :{
+          Authorization: token,
+        }
+      }).then((response)=>{
+        console.log(response.data.content)
+        setContents(response.data.content);
+        setError("");
+      }).catch((error)=>{
+        console.log(error);
+      });
+  }
+
+  useEffect(()=>{
+    fetchData();
   },[openModal]);
   
   return (
     <>
+      {error && <div className="text-red-500">{error}</div>}
       {openModal && <CreateModal />}
+
       <div className="grid justify-items-stretch grid-cols-3 gap-5">
-        <Card
-          type="Document"
-          title="Second Brain"
-          body={{ title: "Second Brain", points: ["Point 1", "Point 2"] }}
-          tags={["Hello", "Hi"]}
-        />
-        <Card
-          type="Video"
-          title="Coolie Review"
-          link="https://www.youtube.com/watch?v=ydOT0ZbPs9o"
-          tags={["jk", "coolie"]}
-        />
-        <Card
-          type="Tweet"
-          title="Arangam Athiratume"
-          body={{
-            title: "Arangam Athiratume",
-            para: "Coolie is a 2025 Indian Tamil-language action thriller film directed by Lokesh Kanagaraj and produced by Kalanithi Maran under Sun Pictures. The film features an ensemble cast including Rajinikanth, Nagarjuna Akkineni, Soubin Shahir, Upendra, Shruti Haasan, Sathyaraj and Rachita Ram, with Aamir Khan and Pooja Hegde in special appearances. In the film, a former coolie union leader investigates the death of his friend which leads him to a crime syndicate.",
-          }}
-          tags={["Ani", "Music"]}
-        />
-        <Card
-          type="Document"
-          title="Third Brain"
-          body={{ title: "Third Brain", points: ["Point A", "Point B"] }}
-          tags={["Third","Help"]}
-        />
+        {contents.map((content, index) => {
+          if (content.type === "Document") {
+            return (
+              <Card
+                key={index}
+                type="Document"
+                title={content.title}
+                files={content.files?.map((f: any) => ({
+                  FileName: f.name ?? f.FileName,
+                  FileURL: f.url ?? f.FileURL,
+                }))}
+                tags={content.tags || []}
+              />
+            );
+          } else if (content.type === "Video") {
+            return (
+              <Card
+                key={index}
+                type="Video"
+                title={content.title}
+                link={content.link || ""}
+                tags={content.tags || []}
+              />
+            );
+          } else if (content.type === "Tweet") {
+            return (
+              <Card
+                key={index}
+                type="Tweet"
+                title={content.title}
+                body={{
+                  para: content.body?.paragraph || "",
+                }}
+                tags={content.tags || []}
+              />
+            );
+          }
+        })}
+        
       </div>
-     </>
+    </>
   );
 }

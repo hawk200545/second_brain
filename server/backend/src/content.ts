@@ -122,11 +122,44 @@ app.get("/content", async (req: UserRequest, res: Response) => {
       });
       return;
     }
-    let content = await Content.find({
+    let returnContent: any[] = [];
+    const content = await Content.find({
       userId: req.user.id.toString(),
     });
+
+    // Use Promise.all to handle async operations for files and tags
+    for (const item of content) {
+      // Get file links
+      let fileLinks: { FileName: string | undefined; FileURL: string | undefined }[] = [];
+      if (item.files && Array.isArray(item.files)) {
+        const fileDocs = await Promise.all(
+          item.files.map((file: any) => FileModel.findById(file))
+        );
+        fileLinks = fileDocs
+          .filter((fileDoc) => fileDoc && fileDoc.FileURL)
+          .map((fileDoc) => ({ FileName: fileDoc?.FileName, FileURL: fileDoc?.FileURL }));
+      }
+
+      // Get tag names
+      let realTags: string[] = [];
+      if (item.tags && Array.isArray(item.tags)) {
+        const tagDocs = await Promise.all(
+          item.tags.map((tag: any) => TagModel.findById(tag))
+        );
+        realTags = tagDocs
+          .filter((tagDoc) => tagDoc && tagDoc.Tag)
+          .map((tagDoc) => tagDoc!.Tag);
+      }
+
+      returnContent.push({
+        ...item.toObject(),
+        files: fileLinks,
+        tags: realTags,
+      });
+    }
+
     res.status(200).json({
-      content,
+      content: returnContent,
     });
   } catch (err) {
     res.status(500).json({

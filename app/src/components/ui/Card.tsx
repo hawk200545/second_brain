@@ -4,17 +4,20 @@ import { Document } from "../../assets/document";
 import { Video } from "../../assets/video";
 import { Twitter } from "../../assets/twitter";
 import { Button } from "./Button";
-interface body {
-  title: string;
-  points?: string[];
-  para?: string;
+interface file{
+  FileName : string;
+  FileURL : string;
+}
+interface body{
+  para:string;
 }
 interface CardProps {
   type: "Tweet" | "Document" | "Video";
   title: string;
   link?: string;
-  body?: body;
   tags?: string[];
+  files?: file[];
+  body?:body;
   created_at?: Date;
 }
 const startIcon = {
@@ -31,7 +34,7 @@ export default function Card(props: CardProps) {
       >
         <div className="h-full flex flex-col justify-between">
           <CardTop title={props.title} startIcon={startIcon[props.type]} />
-          <CardBody type={props.type} body={props.body} link={props.link} />
+          <CardBody type={props.type} file={props.files} body={props.body} link={props.link} />
           <div className="flex gap-1">
             {props.tags?.map((value, index) => (
               <Button

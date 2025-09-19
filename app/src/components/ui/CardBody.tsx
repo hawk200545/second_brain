@@ -1,13 +1,17 @@
-interface Body {
-  title: string;
-  points?: string[];
-  para?: string;
+import PdfButtons from "./PdfButton";
+interface body{
+  para:string;
+}
+interface file {
+  FileName: string;
+  FileURL: string;
 }
 
 interface BodyProp {
   type: "Document" | "Video" | "Tweet";
-  body?: Body;
-  link?: string; 
+  file?: file[];
+  link?: string;
+  body?:body;
 }
 
 function getEmbedUrl(youtubeUrl: string): string {
@@ -26,21 +30,17 @@ function getEmbedUrl(youtubeUrl: string): string {
 
     return youtubeUrl;
   } catch {
-    return youtubeUrl; 
-}
+    return youtubeUrl;
+  }
 }
 
 export function CardBody(props: BodyProp) {
   const bodyElement = {
     Document: (
       <div className="p-3">
-        <div className="font-semibold text-lg mb-2">{props.body?.title}</div>
-
-        <ul className="list-disc list-inside space-y-1 text-sm">
-          {props.body?.points?.map((point, index) => (
-            <li key={index}>{point}</li>
-          ))}
-        </ul>
+        {props.file?.map(file => (
+          <PdfButtons key={file.FileName} fileName={file.FileName} fileURL={file.FileURL} />
+        ))}
       </div>
     ),
     Video: (
@@ -55,10 +55,14 @@ export function CardBody(props: BodyProp) {
         ></iframe>
       </div>
     ),
-    Tweet: <div className="max-h-[250px] py-2 overflow-auto">
-      {props.body?.para}
-    </div>
+    Tweet: (
+      <div className="max-h-[250px] py-2 overflow-auto">{props.body?.para}</div>
+    ),
   };
 
-  return <>{bodyElement[props.type]}</>;
+  return (
+    <>
+      <div className="flex justify-start flex-col overflow-auto max-h-[275px] my-1">{bodyElement[props.type]}</div>
+    </>
+  );
 }

@@ -1,5 +1,5 @@
-import PdfIcon from "./PdfIcon";
-import DownloadIcon from "./DownloadIcon";
+import PdfIcon from "./icons/PdfIcon";
+import DownloadIcon from "./icons/DownloadIcon";
 
 interface pdfProps{
     fileName : string;
